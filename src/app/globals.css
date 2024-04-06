@@ -1,33 +1,69 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root{
+    --tw-ring-offset-shadow:white !important;
+    --toastify-color-success: linear-gradient(#00c9c8, #000 79%) !important;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+
+}
+.main-bg-color{
+    background:linear-gradient(#00c9c8, #000 79%);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.main-box-shadow{
+    box-shadow: 0 2px 20px 0 #bbdcff;;
+}
+.home-box-shadow{
+    box-shadow: 0 0 10px #09ecec80;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+input{
+    outline: none;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+button:hover{
+    background-color: white;
+    color: black;
+}
+
+.home-link:hover{
+    background-color: white;
+    color: black;
+    font-weight: bold;
+}
+
+.preloader {
+    height: 100vh;
+    width: 100%;
+    background-color: #000000;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 55;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.preloader .texts-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 200px;
+    width: 500px;
+    font-size: 90px;
+    font-weight: 800;
+    overflow: hidden;
+    color: green;
+    transform: skewY(10);
+    color: #FFF;
+
+}
+
+.texts-container span{
+    color: #09ecec80;
 }
