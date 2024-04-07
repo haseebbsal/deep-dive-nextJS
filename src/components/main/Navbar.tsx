@@ -14,13 +14,20 @@ import { domainVerify } from "@/apis/main";
 import { CiLogout } from "react-icons/ci";
 import { loggingOut } from "@/apis/auth";
 export default function Navbar() {
-    const name = JSON.parse(Cookies.get('userData')!).name
-    const id = JSON.parse(Cookies.get('userData')!).userid
+    const navigate = useRouter()
+    let name;
+    let id:number=0;
+    try {
+        name = JSON.parse(Cookies.get('userData')!).name
+        id = JSON.parse(Cookies.get('userData')!).userid
+    }
+    catch {
+        navigate.replace('/auth/login')
+    }
     const urlDomain = useRef() as RefObject<HTMLInputElement>
     const script_to_copy = useRef() as RefObject<HTMLInputElement>
     const [showModal, setShowModal] = useState(false);
     const [toggleLogOut, setToggleLogOut] = useState(false)
-    const navigate=useRouter()
     const handleAddNewClick = () => {
         setShowModal(true);
     };
