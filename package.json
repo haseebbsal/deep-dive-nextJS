@@ -17,6 +17,7 @@
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "next": "14.1.4",
+    "nodemailer": "^6.9.13",
     "pg": "^8.11.4",
     "pg-promise": "^11.5.5",
     "react": "^18",

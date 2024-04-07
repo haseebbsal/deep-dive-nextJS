@@ -86,7 +86,7 @@ async function signUpAPI(data: Login_SignUp_Data) {
         });
     }
     else if (responseData.message == 'success') {
-        toast.success('Sign Up Successfull', {
+        toast.success('Email Verification Has Been Sent To You', {
             position: "top-center",
             autoClose: 2000,
             hideProgressBar: true,
