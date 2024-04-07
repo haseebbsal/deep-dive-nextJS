@@ -58,7 +58,8 @@ async function AuthMiddleware(request: NextRequest) {
                     return response
                 }
             }
-            catch(e) {
+            catch (e) {
+                console.log('refresh token expired')
                 const response = NextResponse.redirect(new URL('/auth/login', request.nextUrl.origin))
                 response.cookies.delete('accessToken')
                 response.cookies.delete('refreshToken')

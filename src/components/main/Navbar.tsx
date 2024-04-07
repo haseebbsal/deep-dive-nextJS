@@ -73,9 +73,8 @@ export default function Navbar() {
         else {
             const domain = new URL(urlDomain.current?.value).host
             const dataVerification = await domainVerify(id, domain)
-           
-            if (dataVerification.message == 'domain already exists') {
-                toast.error('Domain Already Exists', {
+            if (dataVerification.redirected) {
+                toast.success('Session Has Expired..', {
                     position: "top-right",
                     autoClose: 2000,
                     hideProgressBar: true,
@@ -86,40 +85,95 @@ export default function Navbar() {
                     theme: "colored",
 
                 });
-            }
-            else if (dataVerification.message == 'verified') {
-                toast.success('Verified', {
-                    position: "top-right",
-                    autoClose: 2000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
+                setTimeout(() => {
+                    navigate.push('/auth/login')
+                }, 2000)
 
-                });
             }
             else {
-                toast.error('Not Verified', {
-                    position: "top-right",
-                    autoClose: 2000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
+                const verificationData= await dataVerification.json()
+                if (verificationData.message == 'domain already exists') {
+                    toast.error('Domain Already Exists', {
+                        position: "top-right",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
 
-                });
+                    });
+                }
+                else if (verificationData.message == 'verified') {
+                    toast.success('Verified', {
+                        position: "top-right",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+
+                    });
+                }
+                else {
+                    toast.error('Not Verified', {
+                        position: "top-right",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+
+                    });
+                }
             }
+           
         }
 
     };
     async function logOut() {
         const loggingOutResponse = await loggingOut()
-        if (loggingOutResponse.message == 'success') {
-            toast.success('Logging Out...', {
+        console.log(loggingOutResponse.redirected)
+        if (!loggingOutResponse.redirected) {
+            const responseData = await loggingOutResponse.json()
+            if (responseData.message == 'success') {
+                toast.success('Logging Out...', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+
+                });
+                setTimeout(() => {
+                    navigate.push('/auth/login')
+                }, 2000)
+            }
+            else {
+                toast.error('Error In Logging Out', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+
+                });
+            }
+
+        }
+        else {
+            toast.success('Session Has Expired...', {
                 position: "top-right",
                 autoClose: 2000,
                 hideProgressBar: true,
@@ -132,20 +186,7 @@ export default function Navbar() {
             });
             setTimeout(() => {
                 navigate.push('/auth/login')
-            },2000)
-        }
-        else {
-            toast.error('Error In Logging Out', {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-
-            });
+            }, 2000)
         }
     }
     return (
