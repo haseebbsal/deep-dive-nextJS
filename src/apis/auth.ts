@@ -116,8 +116,6 @@ async function signUpAPI(data: Login_SignUp_Data) {
 
 async function loggingOut() {
     const data = await fetch('/api/auth/logout', { credentials: 'include' })
-    // const responseData= await data.json()
-    // return {status:data.status,data:responseData}
     return data
 }
 

@@ -3,14 +3,17 @@
 import { loginAPI } from "@/apis/auth";
 import { useRouter } from "next/navigation";
 export default function Login() {
-    const navigate=useRouter()
+    const navigate = useRouter()
     async function handleSubmit(e: any) {
         e.preventDefault()
         const formData = new FormData(e.target)
         const data = [...formData.entries()]
         const loginResponse = await loginAPI(data)
         if (loginResponse == 'success') {
-            navigate.replace('/dashboard')
+            setTimeout(() => {
+                navigate.replace('/dashboard')
+            },2000)
+            
         }
 
 

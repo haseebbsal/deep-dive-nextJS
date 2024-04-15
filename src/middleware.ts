@@ -19,6 +19,7 @@ async function AuthMiddleware(request: NextRequest) {
             }
             console.log('accessToken payload',payload)
         }
+
         catch {
             console.log('access token expired')
             const refreshToken = request.cookies.get('refreshToken')?.value

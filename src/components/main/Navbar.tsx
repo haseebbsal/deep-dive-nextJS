@@ -4,26 +4,33 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { Modal } from "react-bootstrap";
 import { toast } from 'react-toastify'
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.js';
+// import 'bootstrap/dist/js/bootstrap.js';
 import '../../app/globals.css'
-import { useRouter } from "next/navigation";
-import { useState, useRef, RefObject } from "react";
+import {  useRouter } from "next/navigation";
+import { useState, useRef, RefObject, useEffect } from "react";
 import { IoCopy } from "react-icons/io5";
 import Cookies from "js-cookie";
 import { domainVerify } from "@/apis/main";
 import { CiLogout } from "react-icons/ci";
 import { loggingOut } from "@/apis/auth";
+import dynamic from "next/dynamic";
 export default function Navbar() {
     const navigate = useRouter()
-    let name;
-    let id:number=0;
-    try {
-        name = JSON.parse(Cookies.get('userData')!).name
-        id = JSON.parse(Cookies.get('userData')!).userid
-    }
-    catch {
-        navigate.replace('/auth/login')
-    }
+    const [name, setName] = useState('')
+    const [id, setId] = useState(0)
+
+    useEffect(() => {
+        require("bootstrap/dist/js/bootstrap.bundle.min.js");
+    }, []);
+    useEffect(() => {
+        try {
+            setName(JSON.parse(Cookies.get('userData')!).name)
+            setId(JSON.parse(Cookies.get('userData')!).userid)
+        }
+        catch {
+            navigate.replace('/auth/login')
+        }
+    },[navigate])
     const urlDomain = useRef() as RefObject<HTMLInputElement>
     const script_to_copy = useRef() as RefObject<HTMLInputElement>
     const [showModal, setShowModal] = useState(false);
@@ -231,7 +238,7 @@ export default function Navbar() {
                         <div className="flex justify-end mt-2" >
                             <IoCopy className="text-xl cursor-pointer" onClick={Copy_script}/>
                         </div>
-                        <p ref={script_to_copy} style={{ width: '100%', marginTop: '1rem', height: '10rem', userSelect: 'none' }}>{`<script async window_extracting='deep-dive-analytics' data-id='${id}' src="${window.origin}/js/listening.js"></script>`}</p>
+                        <p ref={script_to_copy} style={{ width: '100%', marginTop: '1rem', height: '10rem', userSelect: 'none' }}>{`<script async window_extracting='deep-dive-analytics' data-id='${id}' src="${process.env.NEXT_PUBLIC_BASE_URL}/js/listening.js"></script>`}</p>
                     </div>
                 </Modal.Body>
                 <Modal.Footer className="flex gap-1 justify-center">
