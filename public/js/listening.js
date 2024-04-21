@@ -2,9 +2,12 @@
     window.onload = (() => {
         let ip;
         var script = document.createElement('script');
-        script.src = "https://cdn.socket.io/4.4.1/socket.io.min.js";
+        script.src = "https://unpkg.com/socket.io-client@4.7.5/dist/socket.io.min.js";
         script.onload = async function () {
-            var socket = io('http://localhost:4070');
+            var socket = io('http://localhost:4070', { query: { sessionid:sessionStorage.getItem('deep_dive') ,pageUrl:window.location.href} });
+            socket.connect()
+            // console.log(socket)
+            // scok
             function fetchWithRetry(url) {
                 return fetch(url)
                     .then(response => {
@@ -36,23 +39,48 @@
                     let userId = document.querySelector("script[window_extracting='deep-dive-analytics']").getAttribute('data-id')
                         const weblink = window.location.href
                         const domain=new URL(weblink).host
-                    socket.emit('DomainVerification', { userId, domain })
+                    socket.emit('DomainVerification', { userId, domain,sessionid:sessionStorage.getItem('deep_dive') })
                     socket.on('serverDomainVerification', function (message) {
-                            console.log('Message from server:', message);
-                            verified = message
-                            if (message) {
+                        console.log('Message from server:', message);
+                        verified = message
+                        if (message.sessionid) {
+                            sessionStorage.setItem('deep_dive', message.sessionid)
+                        }
+                        
+                        if (message.isverified) {
+                            let navigating = false
+                            
+                            window.onbeforeunload = () => {
+                                if (navigating) {
+                                    socket.emit('navigationOnUrl',sessionStorage.getItem('deep_dive'))
+                                }
+                            }
+
+                            const sessionid = sessionStorage.getItem('deep_dive')
+                            
+                            
                                 document.addEventListener('click', (e) => {
                                     if (e.isTrusted) {
                                         console.log(e)
                                         console.log(e.target)
+                                        let isNavigate;
+                                        try {
+                                            isNavigate = e.target.closest('a').href
+                                            if (isNavigate.includes(window.location.href)) {
+                                                navigating = true
+                                            }
+                                        }
+                                        catch {
+                                            isNavigate=null
+                                        }
                                         console.log(ip)
-                                        var clickData = { type: 'click', x: e.clientX, y: e.clientY, button: e.button, element: JSON.stringify(e.target.outerHTML), ip, userId };
+                                        var clickData = { type: 'click', x: e.clientX, y: e.clientY, button: e.button, element: JSON.stringify(e.target.outerHTML), ip, userId,isNavigate ,sessionid};
                                         socket.emit('on-click', clickData);
                                     }
                                 });
                                 // mouse movement
                                 document.addEventListener('mousemove', (e) => {
-                                    var mouseData = { type: 'mousemove', x: e.clientX, y: e.clientY, element: JSON.stringify(e.target.outerHTML), ip, userId };
+                                    var mouseData = { type: 'mousemove', x: e.clientX, y: e.clientY, element: JSON.stringify(e.target.outerHTML), ip, userId, sessionid };
                                     socket.emit('on-mousemove', mouseData);
                                 });
                         }

@@ -5,6 +5,8 @@ export async function GET(request: NextRequest) {
     const data = await fetch(weburl)
     let websiteResponse = await data.text()
     websiteResponse = websiteResponse.replaceAll(weburl, `http://localhost:7080/${weburl.split('//')[1]}`)
+    websiteResponse = websiteResponse.replaceAll('href="/"', `href="http://localhost:7080/${weburl.split('//')[1]}"`)
+    // websiteResponse=websiteResponse.replaceAll()
 
     return new NextResponse(websiteResponse, {
         headers: {
