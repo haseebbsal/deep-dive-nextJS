@@ -15,7 +15,7 @@ export default async function Sessions() {
     const userData = JSON.parse(cookie.get('userData')!.value) as UserData
     const userId = userData.userid
     console.log(userId)
-    const data = await fetch(`${process.env.BASE_URL}/api/sessions/${userId}`)
+    const data = await fetch(`${process.env.BASE_URL}/api/domains/${userId}`,{cache:'no-cache'})
     const domainsData: DomainsData = await data.json()
     // console.log(domainsData)
     
@@ -40,7 +40,7 @@ export default async function Sessions() {
     // 'https://www.metroshoes.com'
     return (
         <>
-            <SessionContainer domainsData={domainsData}/>
+            <SessionContainer userid={userId} domainsData={domainsData}/>
             {/* <iframe src={`/api/proxy?url=${domain}`}  width={400} height={400}/> */}
         </>
     )

@@ -8,8 +8,6 @@ export async function POST(request: NextRequest) {
         const user = data.rows[0];
         if (user) {
             if (user.refreshtoken == refreshToken) {
-
-
                 let updateValues = [userid, newRefreshToken];
                 const queryUpdate = `UPDATE usersignup SET refreshtoken=$2  WHERE id = $1  `
                 await client.query(queryUpdate, updateValues);

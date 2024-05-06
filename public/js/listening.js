@@ -6,8 +6,6 @@
         script.onload = async function () {
             var socket = io('http://localhost:4070', { query: { sessionid:sessionStorage.getItem('deep_dive') ,pageUrl:window.location.href} });
             socket.connect()
-            // console.log(socket)
-            // scok
             function fetchWithRetry(url) {
                 return fetch(url)
                     .then(response => {
@@ -38,7 +36,7 @@
                     socket.emit('reportIP', { ip, city: e.city, continent_name: e.timezone, country_code: e.countryCode, country_name: e.country })
                     let userId = document.querySelector("script[window_extracting='deep-dive-analytics']").getAttribute('data-id')
                         const weblink = window.location.href
-                        const domain=new URL(weblink).host
+                        const domain=new URL(weblink).origin
                     socket.emit('DomainVerification', { userId, domain,sessionid:sessionStorage.getItem('deep_dive') })
                     socket.on('serverDomainVerification', function (message) {
                         console.log('Message from server:', message);

@@ -78,7 +78,7 @@ export default function Navbar() {
             return;
         }
         else {
-            const domain = new URL(urlDomain.current?.value).host
+            const domain = new URL(urlDomain.current?.value).origin
             const dataVerification = await domainVerify(id, domain)
             if (dataVerification.redirected) {
                 toast.success('Session Has Expired..', {

@@ -80,7 +80,10 @@ export const config = {
     matcher: [
         '/auth/login',
         '/auth/signup',
-        '/api/:path*',
+        '/api/auth/:path*',
+        '/api/domains/:path*',
+        '/api/domainVerification/:path*',
+        '/api/sessions/:path*',
         '/dashboard',
         '/sessions',
         '/heatmaps'
