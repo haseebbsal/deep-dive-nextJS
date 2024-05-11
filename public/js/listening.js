@@ -4,7 +4,7 @@
         var script = document.createElement('script');
         script.src = "https://unpkg.com/socket.io-client@4.7.5/dist/socket.io.min.js";
         script.onload = async function () {
-            var socket = io('http://localhost:4070', { query: { sessionid:sessionStorage.getItem('deep_dive') ,pageUrl:window.location.href} });
+            var socket = io('http://localhost:4070', { auth: { sessionid:sessionStorage.getItem('deep_dive') ,pageUrl:window.location.href} });
             socket.connect()
             function fetchWithRetry(url) {
                 return fetch(url)
@@ -46,37 +46,30 @@
                         }
                         
                         if (message.isverified) {
-                            let navigating = false
-                            
-                            window.onbeforeunload = () => {
-                                if (navigating) {
-                                    socket.emit('navigationOnUrl',sessionStorage.getItem('deep_dive'))
-                                }
-                            }
-
-                            const sessionid = sessionStorage.getItem('deep_dive')
-                            
-                            
+                            const sessionid = sessionStorage.getItem('deep_dive')        
                                 document.addEventListener('click', (e) => {
                                     if (e.isTrusted) {
-                                        console.log(e)
+                                        // console.log(e)
                                         console.log(e.target)
                                         let isNavigate;
                                         try {
                                             isNavigate = e.target.closest('a').href
-                                            if (isNavigate.includes(window.location.href)) {
-                                                navigating = true
-                                            }
+                             
+                                            console.log('navigate', isNavigate)
+                                            var clickData = { type: 'click', x: e.clientX, y: e.clientY, button: e.button, element: JSON.stringify(e.target.outerHTML), ip, userId, isNavigate, sessionid };
+                                            socket.emit('on-click', clickData);
+                                            socket.auth.sessionid=sessionid
+                                            socket.auth.pageUrl = isNavigate
+                                            socket.disconnect().connect();
+                                           
+                                            
                                         }
-                                        catch {
+                                        catch (e) {
+                                          
                                             isNavigate=null
                                         }
-                                        console.log(ip)
-                                        var clickData = { type: 'click', x: e.clientX, y: e.clientY, button: e.button, element: JSON.stringify(e.target.outerHTML), ip, userId,isNavigate ,sessionid};
-                                        socket.emit('on-click', clickData);
                                     }
                                 });
-                                // mouse movement
                                 document.addEventListener('mousemove', (e) => {
                                     var mouseData = { type: 'mousemove', x: e.clientX, y: e.clientY, element: JSON.stringify(e.target.outerHTML), ip, userId, sessionid };
                                     socket.emit('on-mousemove', mouseData);
