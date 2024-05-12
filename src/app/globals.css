@@ -1,73 +1,92 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-:root{
-    --tw-ring-offset-shadow:white !important;
-    --toastify-color-success: linear-gradient(#00c9c8, #000 79%) !important;
-
-
+:root {
+  --tw-ring-offset-shadow: white !important;
+  --toastify-color-success: linear-gradient(#00c9c8, #000 79%) !important;
 }
-.main-bg-color{
-    background:linear-gradient(#00c9c8, #000 79%);
+.main-bg-color {
+  background: linear-gradient(#00c9c8, #000 79%);
 }
 
-.main-box-shadow{
-    box-shadow: 0 2px 20px 0 #bbdcff;;
+.main-box-shadow {
+  box-shadow: 0 2px 20px 0 #bbdcff;
 }
-.home-box-shadow{
-    box-shadow: 0 0 10px #09ecec80;
-}
-
-input{
-    outline: none;
+.home-box-shadow {
+  box-shadow: 0 0 10px #09ecec80;
 }
 
-button:hover{
-    background-color: white;
-    color: black;
+input {
+  outline: none;
 }
 
-.home-link:hover{
-    background-color: white;
-    color: black;
-    font-weight: bold;
+button:hover {
+  background-color: white;
+  color: black;
+}
+
+.home-link:hover {
+  background-color: white;
+  color: black;
+  font-weight: bold;
+}
+.min-h-screen {
+  min-height: 100vh;
+  height: auto;
+  overflow-y: auto; /* Allows vertical scrolling */
 }
 
 .preloader {
-    height: 100vh;
-    width: 100%;
-    background-color: #000000;
-    color: white;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 55;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+  height: 100vh;
+  width: 100%;
+  background-color: #000000;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 55;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .preloader .texts-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 200px;
-    width: 500px;
-    font-size: 90px;
-    font-weight: 800;
-    overflow: hidden;
-    color: green;
-    transform: skewY(10);
-    color: #FFF;
-
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 200px;
+  width: 500px;
+  font-size: 90px;
+  font-weight: 800;
+  overflow: hidden;
+  color: rgb(12, 226, 191);
+  transform: skewY(10);
+  color: #fff;
 }
 
-.texts-container span{
-    color: #09ecec80;
+.texts-container span {
+  color: #01181880;
 }
-
-
-
-
+/* Sessions.module.css */
+.custom-table {
+  background-color: #fff;
+  border-collapse: collapse;
+  width: 100%;
+}
+.custom-table th,
+.custom-table td {
+  border: 1px solid #dddddd3d;
+  padding: 8px;
+}
+.custom-table th {
+  background-color: #1cb0caa6;
+  color: white;
+}
+.custom-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+.custom-table tr:hover {
+  background-color: #ddd;
+}
