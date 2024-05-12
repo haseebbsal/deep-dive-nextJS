@@ -8,9 +8,9 @@ export default function LoginOrSignUp({ params }: { params: { loginorsignup: str
     !Authlinks.includes(loginorsignup)?notFound():''
     return (
         <>
-            <div className="w-[50%] main-box-shadow rounded flex flex-col gap-8  items-center p-16">
+            <div className=" main-box-shadow rounded flex flex-col gap-8  items-center p-16">
                 <div className="flex border w-full border-solid border-white rounded ">
-                    <Link href={'/auth/login'} className={loginorsignup == 'login' ? 'bg-[#00c9c8] px-6 py-2 rounded justify-center flex items-center w-1/2' :'px-6 py-2 justify-center flex items-center rounded w-1/2 '}>Login</Link>
+                    <Link href={'/auth/login'} className={loginorsignup == 'login' ? 'bg-[#00c9c8] px-6 py-2 rounded justify-center flex items-center w-1/2 !text-blue' :'px-6 py-2 justify-center flex items-center rounded w-1/2 '}>Login</Link>
                     <Link href={'/auth/signup'} className={loginorsignup == 'signup' ? 'bg-[#00c9c8] px-6 py-2 rounded justify-center flex items-center  w-1/2' : 'px-6 py-2 justify-center rounded flex items-center w-1/2'}>Sign Up</Link>
                 </div>
                 {

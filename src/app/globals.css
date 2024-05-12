@@ -66,9 +66,7 @@ button:hover {
   color: #fff;
 }
 
-.texts-container span {
-  color: #01181880;
-}
+
 /* Sessions.module.css */
 .custom-table {
   background-color: #fff;
@@ -91,8 +89,8 @@ button:hover {
   background-color: #ddd;
 }
 a{
-  color: white ;
-  text-decoration: none ;
+  color: white !important ;
+  text-decoration: none !important;
 }
 
 canvas{

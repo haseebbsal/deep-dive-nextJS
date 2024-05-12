@@ -28,7 +28,7 @@ const PreLoader = () => {
         <>
             <div className="preloader">
                 <div className="texts-container">
-                    <span>DEEP DIVE</span>
+                    <span className="!text-white">DEEP DIVE</span>
                 </div>
             </div>
         </>
