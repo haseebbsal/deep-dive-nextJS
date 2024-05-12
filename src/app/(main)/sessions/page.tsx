@@ -8,7 +8,6 @@ type UserData = {
     name: string,
     userid:number
 }
-export const dynamic='force-dynamic'
 type DomainsData = { domains: string }[]
 export default async function Sessions() {
     const cookie = cookies()

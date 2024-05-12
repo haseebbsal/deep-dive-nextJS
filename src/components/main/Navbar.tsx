@@ -210,7 +210,7 @@ export default function Navbar() {
                     <div className="flex gap-4 items-center cursor-pointer" onClick={() => {
                         setToggleLogOut(!toggleLogOut)
                     }}>
-                        <p>{name}</p>
+                        <p className="m-0">{name}</p>
                         <Image alt="personImg" src={'/images/undraw_profile.svg'} width={35} height={35} />
                     </div>
                     {toggleLogOut && <div className="absolute top-full bg-white w-full px-4 py-2 ">

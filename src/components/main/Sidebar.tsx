@@ -6,7 +6,6 @@ import { FaPlay } from "react-icons/fa";
 import { RiFireFill } from "react-icons/ri";
 import { MdSpaceDashboard } from "react-icons/md";
 import { BsBoxArrowLeft, BsBoxArrowRight } from "react-icons/bs";
-import { cookies } from "next/headers";
 
 
 
@@ -23,24 +22,24 @@ export default function SideBar() {
                     {!toggle && <p className="font-bold text-2xl ">DEEP DIVE</p>}
                 </div>
                 <div className={toggle ? "flex justify-center items-center flex-wrap" : "flex items-center flex-wrap  "}>
-                    <Link href={'/dashboard'} className="w-[40%] justify-center flex"><MdSpaceDashboard /></Link>
-                    {!toggle && <Link href={'/dashboard'} className="font-bold ">Dashboard</Link>}
+                    <Link href={'/dashboard'} className="w-[40%] justify-center flex text-white "><MdSpaceDashboard /></Link>
+                    {!toggle && <Link href={'/dashboard'} className="font-bold text-white no-underline">Dashboard</Link>}
                 </div>
                 <div className={toggle ? "flex justify-center items-center flex-wrap" : "flex items-center flex-wrap  "}>   
-                    <Link href={'/sessions'} className="w-[40%] justify-center flex"><FaPlay  /></Link>
-                    {!toggle && <Link href={'/sessions'} className="font-bold ">Sessions</Link>}
+                    <Link href={'/sessions'} className="w-[40%] justify-center flex text-white"><FaPlay  /></Link>
+                    {!toggle && <Link href={'/sessions'} className="font-bold text-white no-underline ">Sessions</Link>}
                 </div>
                 <div className={toggle ? "flex justify-center items-center flex-wrap" : "flex items-center flex-wrap  "}>
-                    <Link href={'/heatmaps'} className="w-[40%] justify-center flex " ><RiFireFill  /></Link>
-                    {!toggle && <Link href={'/heatmaps'} className="font-bold ">Heatmaps</Link>}
+                    <Link href={'/heatmaps'} className="w-[40%] justify-center flex text-white" ><RiFireFill  /></Link>
+                    {!toggle && <Link href={'/heatmaps'} className="font-bold text-white no-underline ">Heatmaps</Link>}
                 </div>
                 <div className="flex justify-center items-center flex-wrap  ">
                     {!toggle && <BsBoxArrowLeft onClick={() => {
                         setToggle(!toggle)
-                    }} className="text-xl cursor-pointer" />}
+                    }} className="text-xl cursor-pointer text-white" />}
                     {toggle && <BsBoxArrowRight onClick={() => {
                         setToggle(!toggle)
-                    }} className="text-xl cursor-pointer" />}
+                    }} className="text-xl cursor-pointer text-white" />}
                 </div>
                 
 

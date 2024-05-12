@@ -14,23 +14,21 @@ export default function SessionContainer({
   userid: any;
 }) {
   const [activeDomain, setActiveDomain] = useState(domainsData[0]);
-  // let userId:number;
-  // if (window) {
-  //     userId = JSON.parse(Cookies.get('userData')!).userid
-  // }
-  // const userId = JSON.parse(Cookies.get('userData')!).userid
   const [sessions, setSessions] = useState([]);
 
   const {
     data,
-    error,
     fetchNextPage,
     hasNextPage,
     isFetching,
     isLoading,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery(
+  }: {
+      data: any,
+      fetchNextPage:any,
+      hasNextPage?: any,
+      isFetching: any,
+      isLoading: any
+} = useInfiniteQuery(
     ["sessions", userid, activeDomain?.domains],
     ({ queryKey, pageParam = 0 }) =>
       fetch(
@@ -45,7 +43,6 @@ export default function SessionContainer({
     }
   );
   console.log("hasNextPage", hasNextPage);
-  // const sessions = useQuery(['sessions',userid,activeDomain.domains], ({queryKey}) => fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sessions/${queryKey[1]}/${queryKey[2]}`).then(e=>e.json()))
   if (!domainsData.length) {
     return "no domains exist";
   }
@@ -78,79 +75,54 @@ export default function SessionContainer({
         </Select>
       </div>
 
-      {/* <div className="flex flex-col items-center mt-8 gap-2">
-        {isLoading && <p>Fetching Sessions..</p>}
-        {!isLoading && !isFetching && data?.pages[0].data.length == 0 && (
-          <p>No Sessions On This Domain</p>
-        )}
-        {data?.pages.map((page) => {
-          return page.data.map((dataPage: any) => (
-            <Link
-              href={`sessions/${dataPage.sessionid}?domain=${activeDomain.domains}`}
+      {isLoading && <p className="text-center">Fetching Sessions..</p>}
+      {!isLoading && !isFetching && data?.pages[0].data.length === 0 && (
+        <p className="text-center">No Sessions On This Domain</p>
+      )}
+      {
+        data?.pages[0].data.length !== 0 && !isLoading && <div className="flex flex-col items-center mt-8 gap-2">
+          <table className="custom-table">
+            <thead>
+              <tr>
+                <th>Session ID</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody className="table-hover">
+              {data?.pages.map((page:any) =>
+                page.data.map((dataPage: any) => (
+                  <tr key={dataPage.sessionid}>
+                    <td>
+                      <Link
+                        href={`sessions/${dataPage.sessionid}?domain=${activeDomain.domains}`}
+                      >
+                        {dataPage.sessionid}
+                      </Link>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+
+          {/* Fetch Next Page Button */}
+          {hasNextPage && (
+            <button
+              disabled={isFetching}
+              onClick={() => {
+                fetchNextPage();
+              }}
             >
-              {dataPage.sessionid}
-            </Link>
-          ));
-        })}
-        {hasNextPage && (
-          <button
-            disabled={isFetching}
-            onClick={() => {
-              fetchNextPage();
-            }}
-          >
-            {isFetching ? "loading..." : "Fetch Next"}
-          </button>
-        )}
-      </div> */}
-      <div className="flex flex-col items-center mt-8 gap-2">
-        {isLoading && <p>Fetching Sessions..</p>}
-        {!isLoading && !isFetching && data?.pages[0].data.length === 0 && (
-          <p>No Sessions On This Domain</p>
-        )}
-
-        {/* Session Table */}
-        <table className="custom-table">
-          <thead>
-            <tr>
-              <th>Session ID</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Location</th>
-            </tr>
-          </thead>
-          <tbody className="table-hover">
-            {data?.pages.map((page) =>
-              page.data.map((dataPage: any) => (
-                <tr key={dataPage.sessionid}>
-                  <td>
-                    <Link
-                      href={`sessions/${dataPage.sessionid}?domain=${activeDomain.domains}`}
-                    >
-                      {dataPage.sessionid}
-                    </Link>
-                  </td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-
-        {/* Fetch Next Page Button */}
-        {hasNextPage && (
-          <button
-            disabled={isFetching}
-            onClick={() => {
-              fetchNextPage();
-            }}
-          >
-            {isFetching ? "Loading..." : "Fetch Next"}
-          </button>
-        )}
-      </div>
+              {isFetching ? "Loading..." : "Fetch Next"}
+            </button>
+          )}
+        </div>
+        }
 
       {/* <div>
             {hasNextPage && <button disabled={isFetching} onClick={() => { fetchNextPage() }}>{isFetching ? 'loading...' :'Fetch Next'}</button>}

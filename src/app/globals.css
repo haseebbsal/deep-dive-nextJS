@@ -90,3 +90,11 @@ button:hover {
 .custom-table tr:hover {
   background-color: #ddd;
 }
+a{
+  color: white ;
+  text-decoration: none ;
+}
+
+canvas{
+  height:100% !important;
+}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Kanit } from "next/font/google";
+import 'react-toastify/dist/ReactToastify.css';
 import "./globals.css";
 import QueryProvider from "@/providers/QueryProvider";
 
