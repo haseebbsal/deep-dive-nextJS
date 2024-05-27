@@ -96,3 +96,11 @@ a{
 canvas{
   height:100% !important;
 }
+
+.spinner-color{
+  color:#00c9c8;
+}
+
+.spinner-color:hover + span{
+  display: inline-block;
+}

@@ -10,6 +10,9 @@ import axios from 'axios'
 type DomainsData = { domains: string }[]
 export default function DashboardContainer({ domainsData ,id}: { domainsData: DomainsData,id:number }) {
     const [activeDomain, setActiveDomain] = useState(domainsData[0])
+    if (!activeDomain) {
+        return <p>No Domains On The Dashboard</p>
+    }
     const domainDashboardQuery = useQuery(['domainDashboard', activeDomain.domains], ({ queryKey }) => axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/dashboard?userid=${id}&domain=${queryKey[1]}`), {
         select(data) {
             return data.data

@@ -34,10 +34,11 @@
                     console.log("City:", e.countryCode)
                     console.log("City:", e.country)
                     const weblink = window.location.href
-                    const domain = new URL(weblink).origin
+                        const domain = new URL(weblink).origin
+                    console.log(e)
                     socket.emit('reportIP', { ip, city: e.city, continent_name: e.timezone, country_code: e.countryCode, country_name: e.country,domain })
                     let userId = document.querySelector("script[window_extracting='deep-dive-analytics']").getAttribute('data-id')
-                    socket.emit('DomainVerification', { userId, domain,sessionid:sessionStorage.getItem('deep_dive') })
+                    socket.emit('DomainVerification', { userId, domain,sessionid:sessionStorage.getItem('deep_dive'),country:e.country,countrycode:e.countryCode })
                     socket.on('serverDomainVerification', function (message) {
                         console.log('Message from server:', message);
                         verified = message

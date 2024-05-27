@@ -10,7 +10,7 @@ export default function MainLayout({ children }: {children:React.ReactNode}) {
                 <SideBar/>
                 <div className="flex flex-col w-full">
                     <Navbar />
-                    <div className="bg-gray-100 h-full p-4 overflow-scroll">
+                    <div className="bg-gray-100 h-full p-4 overflow-auto">
                         {children}
                     </div>
                 </div>

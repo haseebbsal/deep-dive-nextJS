@@ -5,6 +5,7 @@ import { useInfiniteQuery } from "react-query";
 import Cookies from "js-cookie";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Link from "next/link";
+import Image from "next/image";
 type DomainsData = { domains: string }[];
 export default function SessionContainer({
   domainsData,
@@ -14,7 +15,6 @@ export default function SessionContainer({
   userid: any;
 }) {
   const [activeDomain, setActiveDomain] = useState(domainsData[0]);
-  const [sessions, setSessions] = useState([]);
 
   const {
     data,
@@ -36,17 +36,14 @@ export default function SessionContainer({
       ).then((e) => e.json()),
     {
       getNextPageParam: (lastPage, pages) => {
-        console.log("lastpage", lastPage);
         return lastPage.next;
       },
       enabled: !!activeDomain,
     }
   );
-  console.log("hasNextPage", hasNextPage);
   if (!domainsData.length) {
     return "no domains exist";
   }
-  console.log("actual data", data);
 
   return (
     <>
@@ -84,7 +81,7 @@ export default function SessionContainer({
           <table className="custom-table">
             <thead>
               <tr>
-                <th>Session ID</th>
+                <th>ID</th>
                 <th>Date</th>
                 <th>Time</th>
                 <th>Location</th>
@@ -92,20 +89,44 @@ export default function SessionContainer({
             </thead>
             <tbody className="table-hover">
               {data?.pages.map((page:any) =>
-                page.data.map((dataPage: any) => (
-                  <tr key={dataPage.sessionid}>
-                    <td>
-                      <Link
-                        href={`sessions/${dataPage.sessionid}?domain=${activeDomain.domains}`}
-                      >
+                page.data.map((dataPage: any) => {
+                  const pmConst = 12
+                  const pmMapping:{[index:number]:number} = { 13: 1, 14: 2, 15: 3, 16: 4, 17: 5, 18: 6, 19: 7, 20: 8, 21: 9, 22: 10, 23: 11 }
+                  const newStartedAt = new Date(parseInt(dataPage.startedat)).getHours()
+                  const endedAt = new Date(parseInt(dataPage.endedat)).getHours()
+                  const isPmActualTime = newStartedAt > 12 ? pmMapping[newStartedAt] : newStartedAt
+                  const isAmActualTime = endedAt > 12 ? pmMapping[endedAt] : endedAt
+                  let hoursToDisplay:number
+                  if ((isPmActualTime !== newStartedAt)&& (isAmActualTime==endedAt)) {
+                    const pmDifference = pmConst - isPmActualTime
+                    hoursToDisplay=pmDifference+endedAt
+                  }
+                  else {
+                    hoursToDisplay = endedAt-newStartedAt
+                  }
+                  return (
+                    <tr key={dataPage.sessionid} className="relative">
+                      <td>
                         {dataPage.sessionid}
-                      </Link>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                ))
+                      </td>
+                      <td>{new Date(parseInt(dataPage.startedat)).toLocaleDateString()}</td>
+                      {/* <td>{new Date(parseInt(dataPage.startedat)).getHours()}</td>
+                      <td>{new Date(parseInt(dataPage.endedat)).getHours()}</td>
+                      <td>{new Date(parseInt(dataPage.startedat)).getMinutes()}</td>
+                      <td>{new Date(parseInt(dataPage.endedat)).getMinutes()}</td> */}
+                      <td>{hoursToDisplay}:{new Date(parseInt(dataPage.startedat)).getMinutes() > new Date(parseInt(dataPage.endedat)).getMinutes() ? new Date(parseInt(dataPage.startedat)).getMinutes() - new Date(parseInt(dataPage.endedat)).getMinutes() : new Date(parseInt(dataPage.endedat)).getMinutes() - new Date(parseInt(dataPage.startedat)).getMinutes()}:{new Date(parseInt(dataPage.startedat)).getSeconds() > new Date(parseInt(dataPage.endedat)).getSeconds() ? new Date(parseInt(dataPage.startedat)).getSeconds() - new Date(parseInt(dataPage.endedat)).getSeconds() : new Date(parseInt(dataPage.endedat)).getSeconds() - new Date(parseInt(dataPage.startedat)).getSeconds()}</td>
+                      <td className="flex items-center gap-2">
+                        <p className="m-0">{dataPage.country}</p>
+                        <div className="h-[2rem] w-[2rem] ">
+                          <Image className="w-full h-full" src={`https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/${dataPage.countrycode.toLowerCase()}.svg`} width={50} height={50} alt={`${dataPage.country} flag`} />
+                        </div>
+                      </td>
+                      <Link
+                        className="absolute top-0 left-0 w-full h-full "
+                        href={`sessions/${dataPage.sessionid}?domain=${activeDomain.domains}`} />
+                    </tr>
+                  )
+                })
               )}
             </tbody>
           </table>
