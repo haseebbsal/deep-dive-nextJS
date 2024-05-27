@@ -101,6 +101,10 @@ export default function SessionContainer({
                     const pmDifference = pmConst - isPmActualTime
                     hoursToDisplay=pmDifference+endedAt
                   }
+                  else if ((isAmActualTime !== endedAt) && (isPmActualTime == newStartedAt)) {
+                    const pmDifference = pmConst - newStartedAt
+                    hoursToDisplay = pmDifference + endedAt
+                  }
                   else {
                     hoursToDisplay = endedAt-newStartedAt
                   }
