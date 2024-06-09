@@ -9,7 +9,7 @@ export default async function Dashboard() {
   const cookie = cookies()
   const userData = JSON.parse(cookie.get('userData')!.value) as UserData
   const userId = userData.userid
-  const data = await fetch(`${process.env.BASE_URL}/api/domains/${userId}`, { cache: 'no-cache' })
+  const data = await fetch(`${process.env.BASE_URL}/api/domains/${userId}`, { cache: 'no-cache' ,credentials:'include'})
   const domainsData: DomainsData = await data.json()
   return (
     <>

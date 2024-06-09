@@ -1,7 +1,3 @@
-// 'use client';
-// import { useEffect } from 'react'
-// import Cookies from 'js-cookie';
-
 import SessionContainer from "@/components/main/Sessions"
 import { cookies } from "next/headers"
 type UserData = {

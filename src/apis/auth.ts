@@ -10,7 +10,7 @@ async function loginAPI(data: Login_SignUp_Data) {
         email: data[0][1],
         password:data[1][1]
     }
-    let fetchData = await fetch('/api/auth/login', { method: 'POST', body: JSON.stringify(userData), headers: { 'Content-Type': 'application/json' },credentials:"include" })
+    let fetchData = await fetch('/api/auth/login', { method: 'POST', body: JSON.stringify(userData), headers: { 'Content-Type': 'application/json' }, credentials: "include" })
     let responseData:LoginSignUpResponseData = await fetchData.json()
     if (responseData.message == 'success') {
         toast.success('Login Successfull', {

@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 const jose = require('jose')
 
@@ -6,15 +7,18 @@ const jose = require('jose')
 const protectedRoutes = ['/dashboard', '/sessions', '/heatmaps']
 async function AuthMiddleware(request: NextRequest) {
     const accessToken = request.cookies.get('accessToken')
+    const userData = request.cookies.get('userData')
     const path = request.nextUrl.pathname
-    if (!accessToken && protectedRoutes.includes(request.nextUrl.pathname)) {
+    if ((!accessToken) && (protectedRoutes.includes(request.nextUrl.pathname))) {
+        // console.log('im here')
         return NextResponse.redirect(new URL('/auth/login',request.nextUrl.origin))
     }
     if (accessToken) {
         const secret = new TextEncoder().encode(process.env.jwt_secret)
         try {
             const { payload } = await jose.jwtVerify(accessToken.value, secret)
-            if (!(protectedRoutes.includes(path)) && !(path.includes('/api'))) {
+            if (!(protectedRoutes.includes(path)) && !(path.includes('/api'))&& !path.includes('/sessions')) {
+                console.log('over here',path)
                 return NextResponse.redirect(new URL('/dashboard', request.nextUrl.origin))
             }
             console.log('accessToken payload',payload)
@@ -39,19 +43,21 @@ async function AuthMiddleware(request: NextRequest) {
                     .sign(secret)
                 const data = await fetch(`${process.env.BASE_URL}/api/auth/newtokens`, { method:"POST",body: JSON.stringify({ refreshToken, newRefreshToken, userid:payload.id }),headers:{'Content-Type':'application/json'}})
                 const responsedata: { message: string } = await data.json()
+                console.log('message',responsedata.message,path)
                 if (responsedata.message == 'success') {
                     if (!(protectedRoutes.includes(path)) && !(path.includes('/api'))) {
                         const response = NextResponse.redirect(new URL('/dashboard', request.nextUrl.origin))
-                        response.cookies.set('accessToken', newaccessToken)
-                        response.cookies.set('refreshToken', newRefreshToken)
+                        response.cookies.set('accessToken', newaccessToken,{httpOnly:true,sameSite:true})
+                        response.cookies.set('refreshToken', newRefreshToken, { httpOnly: true, sameSite: true })
                         return response
                     }
                     const response = NextResponse.next()
-                    response.cookies.set('accessToken', newaccessToken)
-                    response.cookies.set('refreshToken', newRefreshToken)
+                    response.cookies.set('accessToken', newaccessToken,{httpOnly:true,sameSite:true})
+                    response.cookies.set('refreshToken', newRefreshToken,{httpOnly:true,sameSite:true})
                     return response
                 }
                 else {
+                    console.log('im here cause of fail')
                     const response = NextResponse.redirect(new URL('/auth/login', request.nextUrl.origin))
                     response.cookies.delete('accessToken')
                     response.cookies.delete('refreshToken')
@@ -61,6 +67,7 @@ async function AuthMiddleware(request: NextRequest) {
             }
             catch (e) {
                 console.log('refresh token expired')
+                // console.log(e)
                 const response = NextResponse.redirect(new URL('/auth/login', request.nextUrl.origin))
                 response.cookies.delete('accessToken')
                 response.cookies.delete('refreshToken')
@@ -80,12 +87,8 @@ export const config = {
     matcher: [
         '/auth/login',
         '/auth/signup',
-        '/api/auth/:path*',
-        '/api/domains/:path*',
-        '/api/domainVerification/:path*',
-        '/api/sessions/:path*',
         '/dashboard',
-        '/sessions',
+        '/sessions/:path*',
         '/heatmaps'
     ]
 }

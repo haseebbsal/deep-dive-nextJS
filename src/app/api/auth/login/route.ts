@@ -49,9 +49,9 @@ export async function POST(request: NextRequest) {
                     const queryUpdate = `UPDATE usersignup SET refreshtoken=$2  WHERE id = $1  `
                     await client.query(queryUpdate, updateValues);
                     console.log(`Refresh Token Updated`);
-                    cookie.set('accessToken', accessToken)
-                    cookie.set('refreshToken', refreshToken)
-                    cookie.set('userData', JSON.stringify({ name: user.name, userid: user.id }))
+                    cookie.set('accessToken', accessToken,{httpOnly:true,sameSite:true})
+                    cookie.set('refreshToken', refreshToken, { httpOnly: true, sameSite: true })
+                    cookie.set('userData', JSON.stringify({ name: user.name, userid: user.id }), { httpOnly: true, sameSite: true })
                     await client.end()
                     return NextResponse.json({
                         message: 'success'

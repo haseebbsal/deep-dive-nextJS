@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
         const data = await client.query(`SELECT * FROM usersignup WHERE id='${userid}'`)
         const user = data.rows[0];
         if (user) {
+            console.log(refreshToken,user.refreshtoken)
             if (user.refreshtoken == refreshToken) {
                 let updateValues = [userid, newRefreshToken];
                 const queryUpdate = `UPDATE usersignup SET refreshtoken=$2  WHERE id = $1  `
@@ -19,6 +20,7 @@ export async function POST(request: NextRequest) {
             }
             else {
                 await client.end()
+                console.log('here')
                 return NextResponse.json({
                     message: 'fail'
                 })
@@ -27,6 +29,7 @@ export async function POST(request: NextRequest) {
 
         } else {
             await client.end()
+            console.log('no here')
             return NextResponse.json({
                 message: 'fail'
             })
@@ -34,6 +37,7 @@ export async function POST(request: NextRequest) {
     }
     catch {
         await client.end()
+        console.log('no actually here')
         return NextResponse.json({
             message: 'fail'
         })
