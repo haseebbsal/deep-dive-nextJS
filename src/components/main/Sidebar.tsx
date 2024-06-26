@@ -13,9 +13,9 @@ export default function SideBar() {
     const [toggle, setToggle] = useState(false) 
    
     return (
-        <div  className={toggle ? "main-bg-color h-full w-[5%]" : "main-bg-color h-full w-[25%]"}>
+        <div  className={toggle ? "main-bg-color h-full w-[5%]" : "main-bg-color h-full  w-[25%]"}>
             <div  className="flex flex-col text-white  gap-8">
-                <div className="flex  items-center flex-wrap ">
+                <div className="flex justify items-center flex-wrap ">
                     <div className={toggle ? "w-[100%] flex justify-center" : "w-[40%] flex justify-center"}>
                         <Image src={'/images/icons/Dashicon.ico'} width={80} height={80} alt="logo" />
                     </div>

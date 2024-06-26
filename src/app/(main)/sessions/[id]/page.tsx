@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import { useQuery } from "react-query";
 import axios from "axios";
@@ -8,6 +8,7 @@ import { FaPlay } from "react-icons/fa";
 import { FaPause } from "react-icons/fa6";
 import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { FaMousePointer } from "react-icons/fa";
 
 type SessionDataSingle = {
   x_cordinate: string,
@@ -27,17 +28,22 @@ type individualSessionData = {
   startedat: string,
   endedat: string
 }
+
+type PointerPostion = {
+  transform:string
+}
 export default function IndividualSession({
   params: { id },
   searchParams: { domain },
 }: {
   params: { id: string };
   searchParams: { domain: string };
-}) {
+  }) {
   const [loading, setLoading] = useState(true);
   const [playState, setPlayState]=useState(0)
   const [startSession, setStartSession]=useState(true)
-  const [currentTime,setCurrentTime]=useState<string|null>()
+  const [currentTime, setCurrentTime] = useState<string | null>()
+  const [pointerPosition,setPointerPosition]=useState<null|PointerPostion>()
   const getAllSessionDataOfId = useQuery(['allSessionData', id], () => axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sessions/getAllSessions/${id}`))
   const individualSessionDataOfId = useQuery(['individualSessionData', id], ({ queryKey }) => axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sessions/individualSession/${queryKey[1]}`))
   const Domain = domain.includes("http://127.0.0.1:5501")
@@ -66,6 +72,14 @@ export default function IndividualSession({
         for (let j of getAllSessionDataOfId.data?.data.data) {
           const index = getAllSessionDataOfId.data?.data.data.indexOf(j)
           const singleSessionData: SessionDataSingle = { x_cordinate: j.x_cordinate, y_cordinate: j.y_cordinate, action_type: j.action_type, element: j.element, date: j.date, time: j.time, count: j.count, sessiontime: j.sessiontime }
+          // if (newData.length == 0) {
+          //   console.log('beginning',singleSessionData.sessiontime,)
+            
+          // }
+          // else {
+          //   console.log('beginning', singleSessionData.sessiontime,'see',newData[newData.length-1].sessiontime)
+
+          // }
           if (newData.length == 0) {
             if (singleSessionData.sessiontime == individual.startedat) {
               newData.push(singleSessionData)
@@ -81,6 +95,7 @@ export default function IndividualSession({
                 else {
                   add = parseInt(newData[newData.length - 1].sessiontime) + (1000)
                 }
+                console.log(`in here before ${newData[newData.length - 1].sessiontime} after ${add}`)
                 newData.push({ ...newIndividual, date: new Date(add).toLocaleDateString(), time: new Date(add).toLocaleTimeString(), sessiontime: `${add}` })
               }
               newData.push(singleSessionData)
@@ -94,13 +109,8 @@ export default function IndividualSession({
               const iterateCount = Math.floor((parseInt(singleSessionData.sessiontime) - parseInt(newData[newData.length - 1].sessiontime)) / 1000)
               for (let k = 1; k <= iterateCount; k++) {
                 const newIndividual = { x_cordinate: '', y_cordinate: '', action_type: '', element: '', count: 0 }
-                let add;
-                if (newData.length == 0) {
-                  add = parseInt(individual.startedat) + 1000
-                }
-                else {
-                  add = parseInt(newData[newData.length - 1].sessiontime) + 1000
-                }
+                let add = parseInt(newData[newData.length - 1].sessiontime) + 1000
+                console.log(`in heree before ${newData[newData.length - 1].sessiontime} after ${add}`)
                 newData.push({ ...newIndividual, date: new Date(add).toLocaleDateString(), time: new Date(add).toLocaleTimeString(), sessiontime: `${add}` })
               }
               newData.push(singleSessionData)
@@ -110,13 +120,8 @@ export default function IndividualSession({
                 const iterateCount = Math.floor((parseInt(individual.endedat) - parseInt(singleSessionData.sessiontime)) / 1000)
                 for (let k = 1; k <= iterateCount; k++) {
                   const newIndividual = { x_cordinate: '', y_cordinate: '', action_type: '', element: '', count: 0 }
-                  let add;
-                  if (newData.length == 0) {
-                    add = parseInt(individual.startedat) + 1000
-                  }
-                  else {
-                    add = parseInt(newData[newData.length - 1].sessiontime) + 1000
-                  }
+                  let add= parseInt(newData[newData.length - 1].sessiontime) + 1000
+                  console.log(` in hereee before ${newData[newData.length - 1].sessiontime} after ${add}`)
                   newData.push({ ...newIndividual, date: new Date(add).toLocaleDateString(), time: new Date(add).toLocaleTimeString(), sessiontime: `${add}` })
                 }
               }
@@ -138,52 +143,93 @@ export default function IndividualSession({
           newData.push({ ...newIndividual, date: new Date(add).toLocaleDateString(), time: new Date(add).toLocaleTimeString(), sessiontime: `${add}` })
         }
       }
+      newData = newData.sort((a, b) => parseInt(a.sessiontime) - parseInt(b.sessiontime))
       console.log(newData)
       setStartSession(false)
       let setintervalId = setInterval(() => {
-        if (count==newData.length) {
+        if (count==newData.length-1) {
           clearInterval(setintervalId)
           setPlayState(0)
         }
-        console.log(count, newData.length)
-        console.log(`${(count / (newData.length - 1)) * 100}%`)
-        // console.log(document.getElementById('sessionPlayerScroll'))
-        if (document.getElementById('sessionPlayerScroll')) {
-          if (newData.length) {
-            document.getElementById('sessionPlayerScroll')!.style.width = `${(count / (newData.length)) * 100}%`
-          }
-          else {
-            document.getElementById('sessionPlayerScroll')!.style.width = `${(count)}%`
-          }
-        }
-        setCurrentTime((prev) => {
-          const individual: individualSessionData = individualSessionDataOfId.data?.data
-          if (!prev) {
-            return '0:0:0'
-          }
-          const splitTime = prev.split(':')
-          let hours = parseInt(splitTime[0])
-          let minutes = parseInt(splitTime[1])
-          let seconds = parseInt(splitTime[2])
-          // console.log(splitTime)
-          if ((seconds + 1) == 60) {
-            if ((minutes + 1) == 60) {
-              hours += 1
+        else {
+          console.log(count, newData.length-1)
+          // console.log(`${(count / (newData.length - 1)) * 100}%`)
+
+          setPointerPosition({ transform: `translate(${newData[count].x_cordinate}px,${newData[count].y_cordinate}px)` })
+          // console.log(document.getElementById('sessionPlayerScroll'))
+          if (document.getElementById('sessionPlayerScroll')) {
+            if (newData.length) {
+              document.getElementById('sessionPlayerScroll')!.style.width = `${((count+1) / (newData.length-1)) * 100}%`
             }
             else {
-              minutes += 1
+              document.getElementById('sessionPlayerScroll')!.style.width = `${(count)}%`
             }
-            seconds=0
           }
-          else {
-            seconds+=1
-          }
-          return `${hours}:${minutes}:${seconds}`
-        })
-        // setCurrentTime(new Date(parseInt(newData[count].sessiontime)).toLocaleTimeString())
-        // console.log(new Date(parseInt(newData[count].sessiontime)).toLocaleTimeString(),newData[count],count)
-        count+=1
-      }, 1000)
+          console.log('timeeeeee',newData[count].time)
+          setCurrentTime((prev) => {
+            const individual: individualSessionData = individualSessionDataOfId.data?.data
+            if (!prev) {
+              return '0:0:0'
+            }
+            const splitTime = prev.split(':')
+            let hours = parseInt(splitTime[0])
+            let minutes = parseInt(splitTime[1])
+            let seconds = parseInt(splitTime[2])
+            // console.log(splitTime)
+            if ((count == 0)) {
+              if ((seconds + 1) == 60) {
+                if ((minutes + 1) == 60) {
+                  hours += 1
+                }
+                else {
+                  minutes += 1
+                }
+                seconds = 0
+              }
+              else {
+                seconds += 1
+              }
+              return `${hours}:${minutes}:${seconds}`
+            }
+            else {
+              if (newData[count].time == newData[count - 1].time) {
+                return prev
+              }
+              else {
+                if ((seconds + 1) == 60) {
+                  if ((minutes + 1) == 60) {
+                    hours += 1
+                  }
+                  else {
+                    minutes += 1
+                  }
+                  seconds = 0
+                }
+                else {
+                  seconds += 1
+                }
+                return `${hours}:${minutes}:${seconds}`
+              }
+            }
+            // if ((seconds + 1) == 60) {
+            //   if ((minutes + 1) == 60) {
+            //     hours += 1
+            //   }
+            //   else {
+            //     minutes += 1
+            //   }
+            //   seconds = 0
+            // }
+            // else {
+            //   seconds += 1
+            // }
+            // return `${hours}:${minutes}:${seconds}`
+          })
+          // setCurrentTime(new Date(parseInt(newData[count].sessiontime)).toLocaleTimeString())
+          // console.log(new Date(parseInt(newData[count].sessiontime)).toLocaleTimeString(),newData[count],count)
+          count += 1
+        }
+      },20)
       intervalId=setintervalId
       
       
@@ -195,18 +241,23 @@ export default function IndividualSession({
     return () => {
       clearInterval(intervalId)
     }
-  },[loading,getAllSessionDataOfId.isLoading,individualSessionDataOfId.isLoading])
-
+  }, [loading, getAllSessionDataOfId.isLoading, individualSessionDataOfId.isLoading])
+  
+  // console.log('pointer',pointerPosition)
   return (
     <>
       <div className="relative h-[30rem]">
-        <div className="h-full relative">
+        <div className="h-full overflow-auto relative">
           <iframe
-            onLoad={() => {
+            
+            onLoad={(e:any) => {
+              e.target.contentWindow.onmousemove = (e:any) => {
+                console.log(e)
+              }
               setLoading(false)
             }}
             src={`/api/proxy?url=${Domain}`}
-            className={`w-full h-full ${loading ? 'invisible' : 'visible'} `}
+            className={`w-[65rem] object-contain h-full ${loading ? 'invisible' : 'visible'} `}
           />
           {!loading && !getAllSessionDataOfId.isLoading && !individualSessionDataOfId.isLoading && <div className="flex flex-col mt-16 ">
             <div>
@@ -233,7 +284,8 @@ export default function IndividualSession({
               </button>
             </div>
           </div>}
-          <div className="absolute h-full w-full top-0"></div>
+          {!startSession && <FaMousePointer style={pointerPosition!} id="pointer" className="absolute top-0 left-0 text-xl text-pink-600" />}
+          <div className="absolute h-full w-full z-10 top-0"></div>
         </div> 
         {startSession && <ImSpinner2 className="absolute h-1/4 w-1/2 top-[35%] left-[25%] spinner-color animate-spin" />}
       </div>
