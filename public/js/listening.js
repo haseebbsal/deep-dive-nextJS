@@ -72,11 +72,16 @@
                                     }
                                 });
                             document.addEventListener('mousemove', (e) => {
-                                console.log(e)
+                                // console.log(e)
                                 // var clickData = { type: 'click', x: e.clientX, y: e.clientY, button: e.button, element: JSON.stringify(e.target.outerHTML), ip, userId, isNavigate, sessionid };
                                     var mouseData = { type: 'mousemove', x: e.clientX, y: e.clientY, element: JSON.stringify(e.target.outerHTML), ip, userId, sessionid };
                                     socket.emit('on-mousemove', mouseData);
-                                });
+                            });
+
+                            window.onscroll = (event) => {
+                                var scrollData = { type: 'scroll', x: window.scrollX, y: window.scrollY, ip, userId, sessionid }
+                                socket.emit('on-scroll',scrollData)
+                            }
                         }
                             else {
                                 console.log('It is not in the domains table')

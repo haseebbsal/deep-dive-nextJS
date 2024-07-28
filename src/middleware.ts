@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 const jose = require('jose')
 
@@ -9,15 +9,16 @@ async function AuthMiddleware(request: NextRequest) {
     const accessToken = request.cookies.get('accessToken')
     const userData = request.cookies.get('userData')
     const path = request.nextUrl.pathname
-    if ((!accessToken) && (protectedRoutes.includes(request.nextUrl.pathname))) {
-        // console.log('im here')
+    console.log('path',path)
+    if ((!accessToken) && (protectedRoutes.includes(path))) {
+        console.log('im hereeeeeeeeee')
         return NextResponse.redirect(new URL('/auth/login',request.nextUrl.origin))
     }
     if (accessToken) {
         const secret = new TextEncoder().encode(process.env.jwt_secret)
         try {
             const { payload } = await jose.jwtVerify(accessToken.value, secret)
-            if (!(protectedRoutes.includes(path)) && !(path.includes('/api'))&& !path.includes('/sessions')) {
+            if (!(protectedRoutes.includes(path))&& !path.includes('/sessions')) {
                 console.log('over here',path)
                 return NextResponse.redirect(new URL('/dashboard', request.nextUrl.origin))
             }

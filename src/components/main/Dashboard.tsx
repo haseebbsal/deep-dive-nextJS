@@ -6,6 +6,7 @@ import { useQuery } from "react-query";
 import DoughnutChart from "../charts/charts";
 import SessionUsageChart from "../charts/UsageChart";
 import axios from 'axios'
+import PieChart from "../charts/pieChart";
 // import Bowser from 'bowser';
 type DomainsData = { domains: string }[]
 export default function DashboardContainer({ domainsData ,id}: { domainsData: DomainsData,id:number }) {
@@ -61,10 +62,13 @@ export default function DashboardContainer({ domainsData ,id}: { domainsData: Do
                     <div className="flex justify-center items-start mt-8 gap-4">
                         <div className=" rounded-lg  ">
                             <SessionUsageChart />
-                            <div className="text-center mt-4"></div>
+                            {/* <div className="text-center mt-4"></div> */}
                         </div>
                         {parseInt(domainDashboardQuery.data.user_agents)!=0 && <div className=" h-full">
                             <DoughnutChart apidata={domainDashboardQuery.data.user_agents} />
+                        </div>}
+                        {domainDashboardQuery.data.country_list.length != 0 && <div>
+                            <PieChart labels={domainDashboardQuery.data.country_list} data={domainDashboardQuery.data.country_total_list} />
                         </div>}
                     </div>
 

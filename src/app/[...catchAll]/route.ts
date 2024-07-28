@@ -16,6 +16,7 @@ export async function GET(request: NextRequest, { params:{catchAll} }: { params:
         ".txt", ".vsd", ".wav", ".weba", ".webm", ".webp", ".woff", ".woff2", ".xhtml", ".xls", ".xlsx",
         ".xml", ".xul", ".zip", ".3gp", ".3g2", ".7z", ".jfif"
     ];
+    console.log(baseurl)
     if (!baseurl) {
         return redirect('/')
     }

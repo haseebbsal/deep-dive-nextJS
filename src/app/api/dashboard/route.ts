@@ -9,6 +9,16 @@ export async function GET(request: NextRequest) {
     const total_users = await client.query('SELECT COUNT(user_id) as count FROM useripadd where domain=$1', [domain])
     const total_session = await client.query('SELECT COUNT(id) as count  from sessionplayer where completed=true AND domain=$1 AND userid=$2', [domain, id])
     const user_agent = await client.query('SELECT agent FROM useripadd where domain=$1', [domain])
+    const country_count = await client.query("select count(*) as total_count,user_country from useripadd WHERE domain=$1 group by user_country ", [domain])
+    const country_list = []
+    const country_count_list=[]
+    for (let j of country_count.rows) {
+        country_list.push(j.user_country)
+    }
+    for (let j of country_count.rows) {
+        country_count_list.push(j.total_count)
+    }
+    console.log('country',country_count.rows)
     const user_agents =user_agent.rows 
     const unique_agents: any = { mobile: [], desktop: [] }
     user_agents.forEach((e: any) => {
@@ -41,6 +51,6 @@ export async function GET(request: NextRequest) {
         desktopCount = count
     })
     await client.end()
-    return NextResponse.json({ total_users: total_users.rows[0].count, total_sessions: total_session.rows[0].count, user_agents:user_agents.length==0?[0,0]: [(desktopCount / user_agents.length) * 100, (mobileCount / user_agents.length) * 100] })
+    return NextResponse.json({ total_users: total_users.rows[0].count, total_sessions: total_session.rows[0].count, user_agents:user_agents.length==0?[0,0]: [(desktopCount / user_agents.length) * 100, (mobileCount / user_agents.length) * 100],country_total_list:country_count_list,country_list })
 
 }
