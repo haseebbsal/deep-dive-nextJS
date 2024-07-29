@@ -5,7 +5,7 @@ import { useState} from "react";
 import { FaPlay } from "react-icons/fa";
 import { RiFireFill } from "react-icons/ri";
 import { MdSpaceDashboard } from "react-icons/md";
-import { BsBoxArrowLeft, BsBoxArrowRight } from "react-icons/bs";
+import { BsBoxArrowLeft, BsBoxArrowRight, BsThreads } from "react-icons/bs";
 
 
 
@@ -32,6 +32,10 @@ export default function SideBar() {
                 <div className={toggle ? "flex justify-center items-center flex-wrap" : "flex items-center flex-wrap  "}>
                     <Link href={'/heatmaps'} className="w-[40%] justify-center flex text-white" ><RiFireFill  /></Link>
                     {!toggle && <Link href={'/heatmaps'} className="font-bold text-white no-underline ">Heatmaps</Link>}
+                </div>
+                <div className={toggle ? "flex justify-center items-center flex-wrap" : "flex items-center flex-wrap  "}>
+                    <Link href={'/thread'} className="w-[40%] justify-center flex text-white"><BsThreads /></Link>
+                    {!toggle && <Link href={'/thread'} className="font-bold text-white no-underline ">Thread</Link>}
                 </div>
                 <div className="flex justify-center items-center flex-wrap  ">
                     {!toggle && <BsBoxArrowLeft onClick={() => {
